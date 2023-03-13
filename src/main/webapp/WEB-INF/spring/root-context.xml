@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 여기는 DB연결 객체만 남겨두면 된다.(최종) -->
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+<!-- 		MemberController 객체생성 -->
+<!-- 	<bean id="memberController" class="com.itwillbs.controller.MemberController"> -->
+	
+<!-- 		생성자 호출  생성자 전달변수 name="memberService" , 객체생성한 참조변수 ref="memberService" -->
+<!-- 		<constructor-arg name="memberService" ref="memberService"></constructor-arg> -->
+		
+<!-- 		set메서드 호출  setMemberService메서드 호출  name="memberService" 
+              , 객체생성한 참조변수 ref="memberService" -->
+<!-- 		<property name="memberService" ref="memberService"></property> -->
+		
+<!-- 	</bean> -->
+	
+<!-- 		MemberServiceImpl 객체생성
+MemberService memberService=new MemberServiceImpl()
+ -->
+<!-- 	<bean id="memberService" class="com.itwillbs.service.MemberServiceImpl"> -->
+<!-- 		<property name="memberDAO" ref="memberDAO"></property> -->
+<!-- 	</bean> -->
+	
+<!-- 		MemberDAOImpl 객체생성 
+	MemberDAO memberDAO=new MemberDAOImpl();-->
+	<!-- 이런애들은 자동으로 생성되게끔 바뀐다 나중에 -->
+<!-- 	<bean id="memberDAO" class="com.itwillbs.dao.MemberDAOImpl"> -->
+<!-- 		<property name="dataSource" ref="dataSource"></property> -->
+<!-- 	</bean> -->
+	
+	<!-- 디비연결 객체생성 세팅용.-->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property> <!-- 1단계,2단계 드라이버불러오고,객체생성 단계 -->
+		<property name="url" value="jdbc:mysql://localhost:3306/jspdb1"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="1234"></property>
+	</bean>
+	
+	<!-- Mybatis 설정하는 객체생성 세팅용.
+		1) dataSource 가져오기 2)configLocation :Mybatis 환경설정 파일 위치 지정
+		3) mapperLocations Mybatis sql구문이 있는 파일 위치 지정  -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> <!-- 객체설정 bean -->
+		<property name="dataSource" ref="dataSource"></property> <!-- property == set객체생성 -->
+		<property name="configLocation" value="classpath:/mybatis-config.xml"></property> 
+		<!--  classpath:/mybatis-config.xml  클래스파일의 경로위치를 찾겠다는 뜻.-->
+		<property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"></property> 
+<!-- 	<value="classpath:mappers/**/*Mapper.xml">
+			→  ** =모든폴더를 찾아라 
+			    *Mapper.xml = ~Mapper.xml로 끝나는파일을 찾겠다  -->
+	</bean>
+	
+	<!-- Mybatis 사용하는 객체생성 (session개념) 세팅용 ->MemberDAOImpl에서 가져다가 객체를 생성(자동으로)
+		 destory-method="clearCache" 사용안하면 자동으로 기억장소 삭제 -->
+	<bean id="SqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache"> 
+	<!-- 오류 ->생성자를 바꿔라 -> property말고 constructor로  -->
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+	
+	</bean>
+	
+<!-- 	디비연동을 하기위해서 JDBC프로그램 필요 
+        JDBC프로그램 수동 설치 WEB-INF lib=>  JDBC 프로그램 설치(복사 붙여넣기)
+        JDBC프로그램 자동 설치 Maven 을 자동으로 설치
+        pom.xml 파일 설치할 프로그램 목록(코드)을 넣으면
+        Maven 저장소에서 자동으로 프로그램 다운 받아짐 
+        
+        https://mvnrepository.com/
+        mysql 검색  MySQL Connector Java 선택
+        MySQL Connector Java » 8.0.32 버전선태
+        -->
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java --> 
+<!-- 		<dependency> -->
+<!--     		<groupId>mysql</groupId> -->
+<!--     		<artifactId>mysql-connector-java</artifactId> -->
+<!--     		<version>8.0.32</version> -->
+<!-- 		</dependency> -->
+        
+        <!-- https://mvnrepository.com 
+         	 spring jdbc검색 
+         	 <dependency>
+    			<groupId>org.springframework</groupId>
+   				<artifactId>spring-jdbc</artifactId>
+    			<version>6.0.6</version>
+			</dependency>
+         	 
+         	 
+         	 -->
+	
+		
+		
+</beans>

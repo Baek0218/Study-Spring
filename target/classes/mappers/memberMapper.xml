@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- src/main/resources 폴더 mappers 만들고 파일 memberMapper.xml 만들기 -->
+
+<!-- 파일이름 대신에 namespace 이름을 불러서 사용 -->
+<mapper namespace="com.itwillbs.mappers.memberMapper">
+  
+  
+<!--  	<insert id="이름" -> sql구문의 하나,하나의 이름 = 메서드이름을 부여하면 편하다.
+ 		? 대신에 MemberDTO에 작성한 멤버변수명을 적어줘야한다. #{변수명} - #{id} -->
+  	<insert id="insertMember">
+  		insert into members (id,pass,name,date)  <!-- 열이름 -->
+  				     values (#{id},#{pass},#{name},#{date})<!-- 행이름 -->
+  	</insert>
+  	  
+    <select id="userCheck" resultType="com.itwillbs.domain.MemberDTO">
+    <!-- resultType = "패키지명.memberDTO 
+     	=> 아이디,비밀번호 일치하면 아이디값. 일치하지않으면 null값 -->
+    <!-- 메서드이름은 통일시킬 필요는 없지만 통일하기! -->
+        select * from members 
+        where id = #{id} and pass = #{pass} 
+    </select>
+    
+    <select id="getMember" resultType="com.itwillbs.domain.MemberDTO">
+     <!-- info에서 id로 정보조회하는 메서드.일치하면 memberDTO값 들고가고 불일치시 null -->
+    	select * from members 
+        where id = #{id} 
+    </select>
+    
+    <update id="updateMember">
+    	update members set name = #{name}
+    	where id = #{id}
+    </update>
+    
+   <delete id="deleteMember">
+   		delete from members
+   		where id = #{id} 
+   </delete> 
+   
+</mapper>
+
+<!-- src/main/resources 폴더를 만들지 않고 설정파일 만들기.  -->
+<!-- mybatis-config.xml 파일 만들기 -->
